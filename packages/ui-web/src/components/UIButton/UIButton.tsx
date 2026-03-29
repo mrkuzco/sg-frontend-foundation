@@ -28,13 +28,13 @@ const buttonVariants = cva(
       variant: {
         primary: [
           // Default
-          "bg-[var(--color-surface-primary)] text-[var(--color-text-icon-inverse)]",
-          // Hover: darken with overlay
-          "hover:brightness-[0.85]",
+          "bg-[image:linear-gradient(var(--color-surface-primary),var(--color-surface-primary))] text-[var(--color-text-icon-inverse)]",
+          // Hover: rgba(0,0,0,0.2) overlay on top of primary
+          "hover:bg-[image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
           // Pressed: back to default
-          "active:brightness-100",
+          "active:bg-[image:linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
           // Disabled
-          "disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)] disabled:brightness-100",
+          "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
         ].join(" "),
         secondary: [
           // Default
