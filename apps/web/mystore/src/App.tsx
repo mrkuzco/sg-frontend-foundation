@@ -1,4 +1,4 @@
-import { UIButton } from "@sg-foundation/ui";
+import { UIButton } from "@sg-foundation/ui-web";
 
 export default function App() {
   return (

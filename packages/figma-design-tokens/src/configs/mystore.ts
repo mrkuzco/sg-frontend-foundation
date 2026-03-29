@@ -35,7 +35,7 @@ const mystore = new FigmaDesignTokensGenerator({
     ],
   },
   ignoreMissingTokens: true,
-  distFolder: '../ui/src/themes/mystore/generated',
+  distFolder: '../ui-web/src/themes/mystore/generated',
 });
 
 async function main() {

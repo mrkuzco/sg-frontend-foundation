@@ -1,5 +1,5 @@
 {
-  "name": "@sg-foundation/ui",
+  "name": "@sg-foundation/ui-shared",
   "version": "0.0.1",
   "type": "module",
   "main": "src/index.ts",
@@ -9,17 +9,10 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "tailwind-merge": "^3.0.0",
-    "@radix-ui/react-slot": "^1.1.0"
+    "tailwind-merge": "^3.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
     "typescript": "^5.7.0"
-  },
-  "peerDependencies": {
-    "react": "^19.0.0"
   }
 }
