@@ -5,6 +5,8 @@ export interface IUIButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> 
   variant?: "primary" | "secondary" | "tertiary";
   /** Button size */
   size?: "lg" | "sm";
+  /** Floating style — adds shadow, secondary becomes white bg */
+  floating?: boolean;
   /** Render as a different element (e.g. anchor) via Radix Slot */
   asChild?: boolean;
   /** Icon before the label */

@@ -68,6 +68,32 @@ export default function App() {
           </div>
         </section>
 
+        {/* Floating Pill Button */}
+        <section className="space-y-4">
+          <h2 className="text-[18px] font-semibold text-[var(--color-text-icon-default)]">Floating Pill Button</h2>
+          <div className="space-y-3">
+            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Large</p>
+            <div className="flex items-center gap-4">
+              <UIButton variant="primary" size="lg" floating>Button label</UIButton>
+              <UIButton variant="secondary" size="lg" floating>Button label</UIButton>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Small</p>
+            <div className="flex items-center gap-4">
+              <UIButton variant="primary" size="sm" floating>Button label</UIButton>
+              <UIButton variant="secondary" size="sm" floating>Button label</UIButton>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Disabled</p>
+            <div className="flex items-center gap-4">
+              <UIButton variant="primary" size="lg" floating disabled>Button label</UIButton>
+              <UIButton variant="secondary" size="lg" floating disabled>Button label</UIButton>
+            </div>
+          </div>
+        </section>
+
         {/* Text Button */}
         <section className="space-y-4">
           <h2 className="text-[18px] font-semibold text-[var(--color-text-icon-default)]">Text Button</h2>
