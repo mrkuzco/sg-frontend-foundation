@@ -85,16 +85,17 @@ type ConfigFetchStyles = {
   /**
    * @description Fetch text, effect, and fill styles from the file.
    * Uses the two-step approach: get style node_ids from file, then fetch node properties.
-   * Useful when styles are defined in a linked library.
+   * When enabled, fetches ALL styles of each type by default.
+   * Optionally provide patterns to filter specific styles.
    */
   fetchStyles?: {
-    /** Pattern to match text style names, e.g. /^(Desktop|Tablet|Mobile|Button|Labels)\// */
+    /** Pattern to filter text style names. If omitted, fetches ALL text styles. */
     textStylePattern?: RegExp;
-    /** Pattern to match effect style names, e.g. /^(Shadow |Focus Ring)/ */
+    /** Pattern to filter effect style names. If omitted, fetches ALL effect styles. */
     effectStylePattern?: RegExp;
-    /** Pattern to match fill/gradient style names, e.g. /gradient/ */
+    /** Pattern to filter fill/gradient style names. If omitted, fetches ALL fill styles with gradients. */
     fillStylePattern?: RegExp;
-  };
+  } | true;
 };
 
 type ConfigIgnoreMissingTokens = {

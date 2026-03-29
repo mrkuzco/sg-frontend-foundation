@@ -371,7 +371,9 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
 
   private async generateTokensFromStyles() {
     if (this.config.version !== 1 || !this.config.fetchStyles) return;
-    const { textStylePattern, effectStylePattern, fillStylePattern } = this.config.fetchStyles;
+
+    const fetchStylesCfg = this.config.fetchStyles === true ? {} : this.config.fetchStyles;
+    const { textStylePattern, effectStylePattern, fillStylePattern } = fetchStylesCfg;
 
     // Step 1: Get all style references from the file
     this.logMessage('Fetching all styles from file...', 'info');
@@ -379,20 +381,26 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
     const styleCount = Object.keys(allStyles).length;
     this.logMessage(`Found ${styleCount} styles in file`, 'info');
 
-    // Filter styles by pattern
+    // Collect styles — if no pattern provided, include ALL of that type
     const textNodeIds: string[] = [];
     const effectNodeIds: string[] = [];
     const fillNodeIds: string[] = [];
 
     for (const [nodeId, style] of Object.entries(allStyles)) {
-      if (style.styleType === 'TEXT' && textStylePattern?.test(style.name)) {
-        textNodeIds.push(nodeId);
+      if (style.styleType === 'TEXT') {
+        if (!textStylePattern || textStylePattern.test(style.name)) {
+          textNodeIds.push(nodeId);
+        }
       }
-      if (style.styleType === 'EFFECT' && effectStylePattern?.test(style.name)) {
-        effectNodeIds.push(nodeId);
+      if (style.styleType === 'EFFECT') {
+        if (!effectStylePattern || effectStylePattern.test(style.name)) {
+          effectNodeIds.push(nodeId);
+        }
       }
-      if (style.styleType === 'FILL' && fillStylePattern?.test(style.name)) {
-        fillNodeIds.push(nodeId);
+      if (style.styleType === 'FILL') {
+        if (!fillStylePattern || fillStylePattern.test(style.name)) {
+          fillNodeIds.push(nodeId);
+        }
       }
     }
 
@@ -445,7 +453,8 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
       seen.clear();
       return entries
         .map((e) => {
-          const key = `${e.name.replace(/\s+/g, '-').toLowerCase()}${e.fontWeight <= 300 ? '-light' : ''}`;
+          let key = e.name.replace(/[^a-zA-Z0-9\s\-\/]/g, '').replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
+          if (e.fontWeight <= 300 && !key.includes('light')) key += '-light';
           if (seen.has(key)) return null;
           seen.add(key);
           return `  "${key}": entry(${e.fontSize}, ${e.lineHeight}, ${e.fontWeight}, ${e.letterSpacing}),`;
@@ -461,9 +470,12 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
     typoContent += `  return [\`\${size}px\`, { lineHeight: \`\${lh}px\`, letterSpacing: ls ? \`\${ls}em\` : "0", fontWeight: String(weight) }];\n}\n\n`;
 
     for (const [group, entries] of Object.entries(textByGroup)) {
-      typoContent += `export const ${group} = {\n${formatGroup(entries)}\n} as const;\n\n`;
+      const varName = group.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+      typoContent += `export const ${varName} = {\n${formatGroup(entries)}\n} as const;\n\n`;
     }
-    typoContent += `export const fontSize = ${Object.keys(textByGroup)[0] || 'desktop'};\n`;
+    const firstGroup = Object.keys(textByGroup)[0] || 'desktop';
+    const firstVarName = firstGroup.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+    typoContent += `export const fontSize = ${firstVarName};\n`;
 
     await createTokenFile(typoContent, 'styles-typography', '', this.config.distFolder, this.config.fileExportType, this.appName);
 

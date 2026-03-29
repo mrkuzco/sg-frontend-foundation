@@ -19,11 +19,7 @@ const mystore = new FigmaDesignTokensGenerator({
     'VariableCollectionId:17:1812',  // Base Colors (TS export)
     'VariableCollectionId:34:1192',  // Utilities & Typefaces (TS export)
   ],
-  fetchStyles: {
-    textStylePattern: /^(Desktop|Tablet|Mobile|Button|Labels)\//,
-    effectStylePattern: /^(Shadow |Focus Ring)/,
-    fillStylePattern: /gradient/i,
-  },
+  fetchStyles: true,  // Fetch ALL text, effect, and fill styles from Figma
   generateCSS: {
     baseCollections: [
       'VariableCollectionId:17:1812',  // Base Colors
