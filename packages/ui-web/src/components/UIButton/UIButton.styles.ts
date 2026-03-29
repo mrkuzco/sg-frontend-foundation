@@ -17,40 +17,51 @@ export const buttonVariants = cva(
     "transition-all duration-150",
     "focus-visible:outline-none",
     focusRing,
-    "disabled:cursor-not-allowed",
+    "disabled:cursor-not-allowed disabled:pointer-events-none",
     "data-[loading]:pointer-events-none",
   ].join(" "),
   {
     variants: {
       variant: {
         primary: [
+          // Default: solid primary bg
           "bg-[image:linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
           "text-[var(--color-text-icon-inverse)]",
+          // Hover: darken overlay
           "hover:bg-[image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
+          // Pressed: back to default
           "active:bg-[image:linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
+          // Focused: darken overlay
           "focus-visible:bg-[image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
+          // Disabled
           "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
-          "disabled:hover:bg-[image:none] disabled:hover:bg-[var(--color-surface-disabled)]",
           "disabled:shadow-none",
         ].join(" "),
         secondary: [
-          "bg-[var(--color-surface-bg-10)]",
+          // Default: subtle teal tint (using gradient so active transition is smooth)
+          "bg-[image:linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
           "text-[var(--color-text-icon-default)]",
+          // Hover: slight darken overlay
           "hover:bg-[image:linear-gradient(rgba(0,0,0,0.03),rgba(0,0,0,0.03)),linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
-          "active:bg-[var(--color-surface-bg-10)]",
-          "disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
-          "disabled:hover:bg-[var(--color-surface-disabled)]",
+          // Pressed: back to default
+          "active:bg-[image:linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
+          // Disabled
+          "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
           "disabled:shadow-none",
         ].join(" "),
         tertiary: [
+          // Default: transparent with subtle border
           "border border-[var(--color-border-subtle)]",
           "bg-transparent",
           "text-[var(--color-text-icon-default)]",
+          // Hover: stronger border
           "hover:border-[var(--color-border-default)]",
+          // Pressed: back to subtle
           "active:border-[var(--color-border-subtle)]",
+          // Focused: remove default border, focus ring handles it
           "focus-visible:border-transparent",
+          // Disabled
           "disabled:border-[var(--color-border-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
-          "disabled:hover:border-[var(--color-border-disabled)]",
           "disabled:shadow-none",
         ].join(" "),
       },
@@ -80,10 +91,10 @@ export const floatingStyles = {
   primary: "shadow-[var(--shadow-shadow-down-xxl)]",
   // Secondary floating: white bg + shadow-down-xl (overrides teal tint)
   secondary: [
-    "bg-[var(--color-surface-lightest)]",
+    "bg-[image:linear-gradient(var(--color-surface-lightest),var(--color-surface-lightest))]",
     "shadow-[var(--shadow-shadow-down-xl)]",
     "hover:bg-[image:linear-gradient(rgba(0,0,0,0.03),rgba(0,0,0,0.03)),linear-gradient(var(--color-surface-lightest),var(--color-surface-lightest))]",
-    "active:bg-[var(--color-surface-lightest)]",
+    "active:bg-[image:linear-gradient(var(--color-surface-lightest),var(--color-surface-lightest))]",
   ].join(" "),
   tertiary: "", // Floating tertiary doesn't exist in Figma
 };
