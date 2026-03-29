@@ -316,21 +316,6 @@
   --shadow-focus-ring-focus-error: 0px 0px 0px 4px rgba(240, 68, 56, 0.12), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   --shadow-focus-ring-focus-success: 0px 0px 0px 4px rgba(18, 183, 106, 0.12), 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   --shadow-shadow-down-xs: 0px 2px 4px -2px rgba(16, 24, 40, 0.02), 0px 2px 6px -4px rgba(16, 24, 40, 0.02), 0px 0px 2px 0px rgba(0, 0, 0, 0.02);
-  --shadow-mystore: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
-  --shadow-m3-elevation-light-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
-  --shadow-shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  --shadow-shadows-shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  --shadow-shadows-shadow-sm: 0px 1px 2px 0px rgba(16, 24, 40, 0.06), 0px 1px 3px 0px rgba(16, 24, 40, 0.1);
-  --shadow-default: -0.5px 0.5px 4px 4px #8b8b8b;
-  --shadow-dropshadow: 0px 8px 24px 0px rgba(234, 124, 105, 0.4);
-  --shadow-smth: 0px 1px 3px 0px rgba(25, 33, 61, 0.1);
-  --shadow-shadows-shadow-md: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.1);
-  --shadow-shadows-shadow-lg: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
-  --shadow-shadows-shadow-xl: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
-  --shadow-shadows-shadow-2xl: 0px 24px 48px -12px rgba(16, 24, 40, 0.18);
-  --shadow-shadows-shadow-3xl: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
-  --shadow-salling: -4px 4px 0px 0px #004a62;
-  --shadow-shadows: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
 
   /* Gradients */
   --gradient-gradient-radial-left: radial-gradient(#004359 9%, #c4d5da 69%, #fbfbfb 100%);
