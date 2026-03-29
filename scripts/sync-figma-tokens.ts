@@ -1,15 +1,20 @@
 /**
  * Sync design tokens from Figma to TypeScript files.
  *
- * Usage: npx tsx scripts/sync-figma-tokens.ts
- *
- * Requires FIGMA_TOKEN env var or pass as argument:
- *   FIGMA_TOKEN=figd_xxx npx tsx scripts/sync-figma-tokens.ts
+ * Usage: FIGMA_TOKEN=figd_xxx pnpm sync-tokens
  */
+
+import { writeFile as fsWriteFile, mkdirSync, existsSync } from "fs";
+import { dirname } from "path";
 
 const FIGMA_FILE_ID = "vn9H7ncA03gyiMWuQMAAHV";
 const TOKEN = process.env.FIGMA_TOKEN || process.argv[2];
 const OUTPUT_DIR = "packages/ui/src/themes/mystore";
+
+// Figma node IDs for key frames
+const TYPOGRAPHY_NODE = "28:1916";
+const ELEVATION_NODE = "394:10907";
+const COLORS_NODE = "12:1105";
 
 if (!TOKEN) {
   console.error("Missing FIGMA_TOKEN. Set env var or pass as argument.");
@@ -23,12 +28,11 @@ async function figmaGet(endpoint: string) {
   return res.json();
 }
 
-// ── Color helpers ──────────────────────────────────────────────────────────
-function toHex(c: { r: number; g: number; b: number; a?: number }, opacity = 1) {
+function toHex(c: { r: number; g: number; b: number; a?: number }) {
   const r = Math.round(c.r * 255);
   const g = Math.round(c.g * 255);
   const b = Math.round(c.b * 255);
-  const a = opacity * (c.a ?? 1);
+  const a = c.a ?? 1;
   if (a < 0.99) return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(2))})`;
   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
@@ -41,54 +45,57 @@ function resolveColor(val: any, variables: Record<string, any>, depth = 0): stri
     const firstMode = Object.values(ref.valuesByMode)[0];
     return resolveColor(firstMode, variables, depth + 1);
   }
-  if (val?.r !== undefined) return toHex(val, val.a);
+  if (val?.r !== undefined) return toHex(val);
   return null;
 }
 
-// ── Extract variables (colors, spacing, etc.) ─────────────────────────────
+async function writeOutput(path: string, content: string) {
+  const dir = dirname(path);
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  await new Promise<void>((resolve, reject) =>
+    fsWriteFile(path, content, "utf-8", (err) => (err ? reject(err) : resolve()))
+  );
+  console.log(`  ✓ ${path}`);
+}
+
+// ── 1. Variables (colors, spacing) ────────────────────────────────────────
 async function extractVariables() {
-  console.log("Fetching Figma variables...");
+  console.log("Fetching variables...");
   const data = await figmaGet(`/files/${FIGMA_FILE_ID}/variables/local`);
   const { variableCollections, variables } = data.meta;
 
   const primitiveColors: Record<string, Record<string, string>> = {};
   const semanticLight: Record<string, Record<string, string>> = {};
   const semanticDark: Record<string, Record<string, string>> = {};
-  const spacingTokens: Record<string, number> = {};
-  const borderRadiusTokens: Record<string, number> = {};
-  const typefaceSizes: Record<string, number> = {};
-  const typefaceLineHeights: Record<string, number> = {};
 
-  for (const [cid, col] of Object.entries(variableCollections) as [string, any][]) {
+  for (const col of Object.values(variableCollections) as any[]) {
     const modes = Object.fromEntries(col.modes.map((m: any) => [m.modeId, m.name]));
     const modeIds = Object.keys(modes);
+    const hasLightDark = modes[modeIds[0]] === "Light" && modes[modeIds[1]] === "Dark";
 
     for (const vid of col.variableIds) {
       const v = variables[vid];
       if (!v) continue;
-      const name = v.name as string;
+      const name: string = v.name;
 
-      // Primitive colors (Base Colors collection)
       if (v.resolvedType === "COLOR" && col.name === "Base Colors") {
         const parts = name.split("/");
         if (parts.length >= 2) {
           const group = parts[parts.length - 2];
           const shade = parts[parts.length - 1];
           if (!primitiveColors[group]) primitiveColors[group] = {};
-          const val = Object.values(v.valuesByMode)[0];
-          const hex = resolveColor(val, variables);
+          const hex = resolveColor(Object.values(v.valuesByMode)[0], variables);
           if (hex) primitiveColors[group][shade] = hex;
         }
       }
 
-      // Semantic tokens with Light/Dark
-      if (v.resolvedType === "COLOR" && modes[modeIds[0]] === "Light" && modes[modeIds[1]] === "Dark") {
-        const lightVal = resolveColor(v.valuesByMode[modeIds[0]], variables);
-        const darkVal = resolveColor(v.valuesByMode[modeIds[1]], variables);
-
+      if (v.resolvedType === "COLOR" && hasLightDark) {
         const parts = name.split("/");
         const category = parts[0];
-        const key = parts.slice(1).join("-").replace(/\s+/g, "-").toLowerCase() || parts[0].toLowerCase();
+        const key = parts.slice(1).join("-").replace(/\s+/g, "-").toLowerCase() || category.toLowerCase();
+
+        const lightVal = resolveColor(v.valuesByMode[modeIds[0]], variables);
+        const darkVal = resolveColor(v.valuesByMode[modeIds[1]], variables);
 
         if (lightVal) {
           if (!semanticLight[category]) semanticLight[category] = {};
@@ -99,146 +106,176 @@ async function extractVariables() {
           semanticDark[category][key] = darkVal;
         }
       }
-
-      // Spacing & border radius
-      if (v.resolvedType === "FLOAT") {
-        const val = Object.values(v.valuesByMode)[0];
-        const numVal = typeof val === "number" ? val : null;
-        if (numVal === null) continue;
-
-        if (name.startsWith("Utilities/spacing/")) {
-          const key = name.replace("Utilities/spacing/", "").replace("_", ".");
-          spacingTokens[key] = numVal;
-        }
-        if (name.startsWith("Utilities/border radius/")) {
-          const key = name.replace("Utilities/border radius/", "");
-          borderRadiusTokens[key] = numVal;
-        }
-        if (name.startsWith("Typeface/size/")) {
-          const key = name.replace("Typeface/size/", "");
-          typefaceSizes[key] = numVal;
-        }
-        if (name.startsWith("Typeface/line height/")) {
-          const key = name.replace("Typeface/line height/", "");
-          typefaceLineHeights[key] = numVal;
-        }
-      }
     }
   }
 
-  return { primitiveColors, semanticLight, semanticDark, spacingTokens, borderRadiusTokens, typefaceSizes, typefaceLineHeights };
+  return { primitiveColors, semanticLight, semanticDark };
 }
 
-// ── Extract text styles from Typography frame ─────────────────────────────
-async function extractTextStyles() {
-  console.log("Fetching Typography frame...");
-  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=28:1916&depth=8`);
-  const root = data.nodes["28:1916"].document;
+// ── 2. Typography ─────────────────────────────────────────────────────────
+interface TextEntry {
+  name: string;
+  fontSize: number;
+  fontWeight: number;
+  lineHeight: number;
+  letterSpacing: number;
+}
 
-  const styles: Record<string, Record<string, Array<{
-    name: string;
-    fontSize: number;
-    fontWeight: number;
-    lineHeight: number;
-    letterSpacing: number;
-  }>>> = {};
+async function extractTypography() {
+  console.log("Fetching typography...");
+  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=${TYPOGRAPHY_NODE}&depth=8`);
+  const root = data.nodes[TYPOGRAPHY_NODE].document;
 
-  function walk(node: any, path: string[] = []) {
-    if (node.type === "TEXT" && node.name === "sample-text") {
-      const s = node.style || {};
-      const chars = node.characters || "";
+  const breakpoints: Record<string, Record<string, TextEntry[]>> = {
+    desktop: {},
+    tablet: {},
+    mobile: {},
+  };
 
-      // Find which breakpoint section we're in
-      let breakpoint = "desktop";
-      let category = "";
-      let variant = chars;
-
-      // Walk up the path to find context
-      for (const p of path) {
-        if (p === "Desktop" || p === "Tablet" || p === "Mobile") breakpoint = p.toLowerCase();
-        if (["Display text", "Title", "Body", "Labels", "Special", "Button"].some(c => p.includes(c))) {
-          category = p.replace(" text", "").toLowerCase();
+  for (const section of root.children || []) {
+    // Find section name from subtitle
+    let sectionName = "";
+    for (const child of section.children || []) {
+      if (child.name === "_docs_subtitle") {
+        for (const sub of child.children || []) {
+          for (const t of sub.children || []) {
+            if (t.type === "TEXT" && t.name === "Subtitle") {
+              sectionName = t.characters.replace(" text", "").toLowerCase();
+            }
+          }
         }
       }
-
-      if (!styles[breakpoint]) styles[breakpoint] = {};
-      if (!styles[breakpoint][category]) styles[breakpoint][category] = [];
-
-      styles[breakpoint][category].push({
-        name: chars,
-        fontSize: s.fontSize || 0,
-        fontWeight: s.fontWeight || 400,
-        lineHeight: s.lineHeightPx || 0,
-        letterSpacing: s.letterSpacing || 0,
-      });
     }
+    if (!sectionName) continue;
 
-    for (const child of node.children || []) {
-      walk(child, [...path, node.name]);
-    }
-  }
+    // Find typography-scale frames
+    for (const child of section.children || []) {
+      if (child.name !== "Frame 1") continue;
 
-  walk(root);
-  return styles;
-}
+      for (const scaleFrame of child.children || []) {
+        if (scaleFrame.name !== "typography-scale") continue;
 
-// ── Extract effect styles from Elevation frame ────────────────────────────
-async function extractEffects() {
-  console.log("Fetching Elevation frame...");
-  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=394:10907&depth=6`);
-  const root = data.nodes["394:10907"].document;
+        // Each typography-scale has 3 column frames (sorted by x = desktop, tablet, mobile)
+        const columns: { x: number; texts: TextEntry[] }[] = [];
+        for (const col of scaleFrame.children || []) {
+          const x = col.absoluteBoundingBox?.x ?? 0;
+          const texts: TextEntry[] = [];
+          for (const t of col.children || []) {
+            if (t.type === "TEXT" && t.name === "sample-text") {
+              const s = t.style || {};
+              texts.push({
+                name: t.characters,
+                fontSize: s.fontSize || 0,
+                fontWeight: s.fontWeight || 400,
+                lineHeight: Math.round(s.lineHeightPx || 0),
+                letterSpacing: s.letterSpacing ? parseFloat(s.letterSpacing.toFixed(4)) : 0,
+              });
+            }
+          }
+          columns.push({ x, texts });
+        }
+        columns.sort((a, b) => a.x - b.x);
 
-  const shadows: Record<string, string[]> = {};
-
-  function walk(node: any, path: string[] = []) {
-    if (node.effects?.length > 0 && node.type === "FRAME" && ["xs", "sm", "md", "lg", "xl"].includes(node.name)) {
-      const direction = path.some(p => p.toLowerCase().includes("up")) ? "up" : "down";
-      const key = `${direction}-${node.name}`;
-      shadows[key] = node.effects
-        .filter((e: any) => e.type === "DROP_SHADOW" && e.visible !== false)
-        .map((e: any) => {
-          const { offset, radius, spread, color } = e;
-          const c = `rgba(${Math.round(color.r * 255)},${Math.round(color.g * 255)},${Math.round(color.b * 255)},${parseFloat(color.a.toFixed(2))})`;
-          return `${offset.x}px ${offset.y}px ${radius}px ${spread}px ${c}`;
+        const bpNames = ["desktop", "tablet", "mobile"];
+        columns.forEach((col, i) => {
+          const bp = bpNames[i];
+          if (!bp) return;
+          if (!breakpoints[bp][sectionName]) breakpoints[bp][sectionName] = [];
+          breakpoints[bp][sectionName].push(...col.texts);
         });
-    }
-
-    for (const child of node.children || []) {
-      walk(child, [...path, node.name]);
+      }
     }
   }
 
-  walk(root);
+  return breakpoints;
+}
+
+// ── 3. Shadows ────────────────────────────────────────────────────────────
+async function extractShadows() {
+  console.log("Fetching shadows...");
+  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=${ELEVATION_NODE}&depth=8`);
+  const root = data.nodes[ELEVATION_NODE].document;
+
+  const shadows: Record<string, string> = {};
+
+  function formatShadow(e: any): string {
+    const ox = e.offset?.x ?? 0;
+    const oy = e.offset?.y ?? 0;
+    const blur = e.radius ?? 0;
+    const spread = e.spread ?? 0;
+    const c = e.color || { r: 0, g: 0, b: 0, a: 0 };
+    const cr = Math.round(c.r * 255);
+    const cg = Math.round(c.g * 255);
+    const cb = Math.round(c.b * 255);
+    const ca = parseFloat((c.a ?? 0).toFixed(2));
+    return `${ox}px ${oy}px ${blur}px ${spread}px rgba(${cr},${cg},${cb},${ca})`;
+  }
+
+  // Walk all nodes looking for frames named xs/sm/md/lg/xl with effects
+  function findShadowFrames(node: any, direction: string) {
+    const name = node.name;
+    const sizes = ["xs", "sm", "md", "lg", "xl"];
+
+    if (node.type === "FRAME" && sizes.includes(name) && node.effects?.length > 0) {
+      const key = `${direction}-${name}`;
+      if (!shadows[key]) {
+        const layers = node.effects
+          .filter((e: any) => e.type === "DROP_SHADOW" && e.visible !== false)
+          .map(formatShadow);
+        shadows[key] = layers.join(", ");
+      }
+    }
+
+    for (const child of node.children || []) {
+      findShadowFrames(child, direction);
+    }
+  }
+
+  // Find the two main sections by subtitle text
+  for (const section of root.children || []) {
+    let direction = "";
+    // Check subtitle text to determine direction
+    function findSubtitle(node: any) {
+      if (node.type === "TEXT" && node.characters) {
+        const text = node.characters.toLowerCase();
+        if (text.includes("down")) direction = "down";
+        if (text.includes("up")) direction = "up";
+      }
+      for (const child of node.children || []) {
+        findSubtitle(child);
+      }
+    }
+    findSubtitle(section);
+
+    if (direction) {
+      findShadowFrames(section, direction);
+    }
+  }
+
   return shadows;
 }
 
-// ── Extract gradient color styles ─────────────────────────────────────────
+// ── 4. Gradients ──────────────────────────────────────────────────────────
 async function extractGradients() {
-  console.log("Fetching gradient styles...");
-  // Gradients are defined in the Colors frame
-  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=12:1105&depth=8`);
-  const root = data.nodes["12:1105"].document;
+  console.log("Fetching gradients...");
+  const data = await figmaGet(`/files/${FIGMA_FILE_ID}/nodes?ids=${COLORS_NODE}&depth=10`);
+  const root = data.nodes[COLORS_NODE].document;
 
   const gradients: Record<string, string> = {};
 
   function walk(node: any) {
-    if (node.fills?.length > 0) {
+    const name = (node.name || "").toLowerCase();
+    if (node.fills?.length > 0 && (name.includes("radial") || name.includes("linear"))) {
       for (const fill of node.fills) {
-        if (fill.type === "GRADIENT_RADIAL" || fill.type === "GRADIENT_LINEAR") {
-          const name = node.name;
-          if (name.includes("radial") || name.includes("linear")) {
-            const stops = fill.gradientStops?.map((s: any) => {
-              const c = toHex(s.color);
-              return `${c} ${Math.round(s.position * 100)}%`;
-            }).join(", ");
+        if (fill.visible === false) continue;
+        if (fill.type !== "GRADIENT_RADIAL" && fill.type !== "GRADIENT_LINEAR") continue;
 
-            if (fill.type === "GRADIENT_RADIAL") {
-              gradients[name] = `radial-gradient(${stops})`;
-            } else {
-              gradients[name] = `linear-gradient(${stops})`;
-            }
-          }
-        }
+        const stops = (fill.gradientStops || [])
+          .map((s: any) => `${toHex(s.color)} ${Math.round(s.position * 100)}%`)
+          .join(", ");
+
+        const type = fill.type === "GRADIENT_RADIAL" ? "radial-gradient" : "linear-gradient";
+        gradients[node.name] = `${type}(${stops})`;
       }
     }
 
@@ -251,56 +288,27 @@ async function extractGradients() {
   return gradients;
 }
 
-// ── Write files ───────────────────────────────────────────────────────────
-function toTS(obj: any, indent = 2): string {
-  return JSON.stringify(obj, null, indent)
-    .replace(/"([^"]+)":/g, '"$1":')
-    .replace(/"/g, '"');
-}
+// ── Generate typography file content ──────────────────────────────────────
+function generateTypographyFile(breakpoints: Record<string, Record<string, TextEntry[]>>): string {
+  function formatBreakpoint(name: string, categories: Record<string, TextEntry[]>): string {
+    const seen = new Set<string>();
+    const entries: string[] = [];
 
-async function writeFile(path: string, content: string) {
-  const { writeFile } = await import("fs/promises");
-  const { dirname } = await import("path");
-  const { mkdirSync, existsSync } = await import("fs");
-  const dir = dirname(path);
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  await writeFile(path, content, "utf-8");
-  console.log(`  ✓ ${path}`);
-}
+    for (const [, items] of Object.entries(categories)) {
+      for (const item of items) {
+        const key = `${item.name.replace(/\s+/g, "-").toLowerCase()}${item.fontWeight <= 300 ? "-light" : ""}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const ls = item.letterSpacing || 0;
+        entries.push(`  "${key}": entry(${item.fontSize}, ${item.lineHeight}, ${item.fontWeight}, ${ls}),`);
+      }
+    }
 
-// ── Main ──────────────────────────────────────────────────────────────────
-async function main() {
-  console.log(`\nSyncing tokens from Figma file: ${FIGMA_FILE_ID}\n`);
+    return `export const ${name} = {\n${entries.join("\n")}\n} as const;`;
+  }
 
-  const [vars, textStyles, effects, gradients] = await Promise.all([
-    extractVariables(),
-    extractTextStyles(),
-    extractEffects(),
-    extractGradients(),
-  ]);
-
-  // Write primitives.ts
-  const primitivesContent = `// Auto-generated from Figma — do not edit manually
-// Run: npx tsx scripts/sync-figma-tokens.ts
-
-export const colors = ${JSON.stringify(vars.primitiveColors, null, 2)} as const;
-`;
-  await writeFile(`${OUTPUT_DIR}/primitives.ts`, primitivesContent);
-
-  // Write semantic.ts
-  const semanticContent = `// Auto-generated from Figma — do not edit manually
-// Run: npx tsx scripts/sync-figma-tokens.ts
-
-export const semantic = {
-  light: ${JSON.stringify(vars.semanticLight, null, 2)},
-  dark: ${JSON.stringify(vars.semanticDark, null, 2)},
-} as const;
-`;
-  await writeFile(`${OUTPUT_DIR}/semantic.ts`, semanticContent);
-
-  // Write typography.ts with all breakpoints
-  const typoContent = `// Auto-generated from Figma — do not edit manually
-// Run: npx tsx scripts/sync-figma-tokens.ts
+  return `// Auto-generated from Figma — do not edit manually
+// Run: FIGMA_TOKEN=xxx pnpm sync-tokens
 
 export const fontFamily = {
   sans: ["Roboto", "sans-serif"],
@@ -316,71 +324,61 @@ function entry(size: number, lh: number, weight: number, ls: number): FontEntry 
   }];
 }
 
-// Desktop text styles
-export const desktop = {
-${Object.entries(textStyles.desktop || {})
-  .map(([category, items]) =>
-    items.map((item: any) => {
-      const key = `${item.name.replace(/\s+/g, "-").toLowerCase()}${item.fontWeight <= 300 ? "-light" : ""}`;
-      return `  "${key}": entry(${item.fontSize}, ${Math.round(item.lineHeight)}, ${item.fontWeight}, ${item.letterSpacing ? parseFloat(item.letterSpacing.toFixed(4)) : 0}),`;
-    }).join("\n")
-  )
-  .join("\n")}
-} as const;
+// Desktop
+${formatBreakpoint("desktop", breakpoints.desktop || {})}
 
-// Tablet text styles
-export const tablet = {
-${Object.entries(textStyles.tablet || {})
-  .map(([category, items]) =>
-    items.map((item: any) => {
-      const key = `${item.name.replace(/\s+/g, "-").toLowerCase()}${item.fontWeight <= 300 ? "-light" : ""}`;
-      return `  "${key}": entry(${item.fontSize}, ${Math.round(item.lineHeight)}, ${item.fontWeight}, ${item.letterSpacing ? parseFloat(item.letterSpacing.toFixed(4)) : 0}),`;
-    }).join("\n")
-  )
-  .join("\n")}
-} as const;
+// Tablet
+${formatBreakpoint("tablet", breakpoints.tablet || {})}
 
-// Mobile text styles
-export const mobile = {
-${Object.entries(textStyles.mobile || {})
-  .map(([category, items]) =>
-    items.map((item: any) => {
-      const key = `${item.name.replace(/\s+/g, "-").toLowerCase()}${item.fontWeight <= 300 ? "-light" : ""}`;
-      return `  "${key}": entry(${item.fontSize}, ${Math.round(item.lineHeight)}, ${item.fontWeight}, ${item.letterSpacing ? parseFloat(item.letterSpacing.toFixed(4)) : 0}),`;
-    }).join("\n")
-  )
-  .join("\n")}
-} as const;
+// Mobile
+${formatBreakpoint("mobile", breakpoints.mobile || {})}
 
 // Default export is desktop
 export const fontSize = desktop;
 `;
-  await writeFile(`${OUTPUT_DIR}/typography.ts`, typoContent);
+}
 
-  // Write effects.ts
-  const shadowEntries = Object.entries(effects)
-    .map(([key, layers]) => `  "${key}": "${layers.join(", ")}"`)
+// ── Main ──────────────────────────────────────────────────────────────────
+async function main() {
+  console.log(`\nSyncing tokens from Figma: ${FIGMA_FILE_ID}\n`);
+
+  const [vars, typography, shadows, gradients] = await Promise.all([
+    extractVariables(),
+    extractTypography(),
+    extractShadows(),
+    extractGradients(),
+  ]);
+
+  // primitives.ts
+  await writeOutput(
+    `${OUTPUT_DIR}/primitives.ts`,
+    `// Auto-generated from Figma — do not edit manually\n// Run: FIGMA_TOKEN=xxx pnpm sync-tokens\n\nexport const colors = ${JSON.stringify(vars.primitiveColors, null, 2)} as const;\n`
+  );
+
+  // semantic.ts
+  await writeOutput(
+    `${OUTPUT_DIR}/semantic.ts`,
+    `// Auto-generated from Figma — do not edit manually\n// Run: FIGMA_TOKEN=xxx pnpm sync-tokens\n\nexport const semantic = {\n  light: ${JSON.stringify(vars.semanticLight, null, 2)},\n  dark: ${JSON.stringify(vars.semanticDark, null, 2)},\n} as const;\n`
+  );
+
+  // typography.ts
+  await writeOutput(`${OUTPUT_DIR}/typography.ts`, generateTypographyFile(typography));
+
+  // effects.ts
+  const shadowEntries = Object.entries(shadows)
+    .map(([k, v]) => `  "${k}": "${v}"`)
     .join(",\n");
 
   const gradientEntries = Object.entries(gradients)
-    .map(([key, val]) => `  "${key}": "${val}"`)
+    .map(([k, v]) => `  "${k}": "${v}"`)
     .join(",\n");
 
-  const effectsContent = `// Auto-generated from Figma — do not edit manually
-// Run: npx tsx scripts/sync-figma-tokens.ts
+  await writeOutput(
+    `${OUTPUT_DIR}/effects.ts`,
+    `// Auto-generated from Figma — do not edit manually\n// Run: FIGMA_TOKEN=xxx pnpm sync-tokens\n\nexport const boxShadow = {\n${shadowEntries},\n  "focus-ring": "0 0 0 4px #6ec8f1",\n} as const;\n\nexport const gradient = {\n${gradientEntries || "  // No gradients found inline — may be in a linked library"}\n} as const;\n`
+  );
 
-export const boxShadow = {
-${shadowEntries},
-  "focus-ring": "0 0 0 4px #6ec8f1",
-} as const;
-
-export const gradient = {
-${gradientEntries}
-} as const;
-`;
-  await writeFile(`${OUTPUT_DIR}/effects.ts`, effectsContent);
-
-  console.log("\n✅ All tokens synced from Figma!\n");
+  console.log("\n✅ All tokens synced!\n");
 }
 
 main().catch(console.error);

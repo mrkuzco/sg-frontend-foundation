@@ -1,5 +1,5 @@
 // Auto-generated from Figma — do not edit manually
-// Run: npx tsx scripts/sync-figma-tokens.ts
+// Run: FIGMA_TOKEN=xxx pnpm sync-tokens
 
 export const colors = {
   "primary": {
@@ -53,29 +53,29 @@ export const colors = {
     "gray-950": "#1f1c1c"
   },
   "light": {
-    "light-05": "rgba(255, 255, 255, 0)",
-    "light-10": "rgba(255, 255, 255, 0.01)",
-    "light-20": "rgba(255, 255, 255, 0.04)",
-    "light-30": "rgba(255, 255, 255, 0.09)",
-    "light-40": "rgba(255, 255, 255, 0.16)",
-    "light-50": "rgba(255, 255, 255, 0.25)",
-    "light-60": "rgba(255, 255, 255, 0.36)",
-    "light-70": "rgba(255, 255, 255, 0.49)",
-    "light-80": "rgba(255, 255, 255, 0.64)",
-    "light-90": "rgba(255, 255, 255, 0.81)",
+    "light-05": "rgba(255, 255, 255, 0.04)",
+    "light-10": "rgba(255, 255, 255, 0.1)",
+    "light-20": "rgba(255, 255, 255, 0.2)",
+    "light-30": "rgba(255, 255, 255, 0.3)",
+    "light-40": "rgba(255, 255, 255, 0.4)",
+    "light-50": "rgba(255, 255, 255, 0.5)",
+    "light-60": "rgba(255, 255, 255, 0.6)",
+    "light-70": "rgba(255, 255, 255, 0.7)",
+    "light-80": "rgba(255, 255, 255, 0.8)",
+    "light-90": "rgba(255, 255, 255, 0.9)",
     "light-100": "#ffffff"
   },
   "dark": {
-    "dark-05": "rgba(0, 0, 0, 0)",
-    "dark-10": "rgba(0, 0, 0, 0.01)",
-    "dark-20": "rgba(0, 0, 0, 0.04)",
-    "dark-30": "rgba(0, 0, 0, 0.09)",
-    "dark-40": "rgba(0, 0, 0, 0.16)",
-    "dark-50": "rgba(0, 0, 0, 0.25)",
-    "dark-60": "rgba(0, 0, 0, 0.36)",
-    "dark-70": "rgba(0, 0, 0, 0.49)",
-    "dark-80": "rgba(0, 0, 0, 0.64)",
-    "dark-90": "rgba(0, 0, 0, 0.81)",
+    "dark-05": "rgba(0, 0, 0, 0.03)",
+    "dark-10": "rgba(0, 0, 0, 0.1)",
+    "dark-20": "rgba(0, 0, 0, 0.2)",
+    "dark-30": "rgba(0, 0, 0, 0.3)",
+    "dark-40": "rgba(0, 0, 0, 0.4)",
+    "dark-50": "rgba(0, 0, 0, 0.5)",
+    "dark-60": "rgba(0, 0, 0, 0.6)",
+    "dark-70": "rgba(0, 0, 0, 0.7)",
+    "dark-80": "rgba(0, 0, 0, 0.8)",
+    "dark-90": "rgba(0, 0, 0, 0.9)",
     "dark-100": "#000000"
   },
   "info": {
@@ -127,16 +127,16 @@ export const colors = {
     "danger-900": "#5c1010"
   },
   "brand": {
-    "brand-05": "rgba(98, 178, 180, 0)",
-    "brand-10": "rgba(98, 178, 180, 0.01)",
-    "brand-20": "rgba(98, 178, 180, 0.04)",
-    "brand-30": "rgba(98, 178, 180, 0.09)",
-    "brand-40": "rgba(98, 178, 180, 0.16)",
-    "brand-50": "rgba(98, 178, 180, 0.25)",
-    "brand-60": "rgba(98, 178, 180, 0.36)",
-    "brand-70": "rgba(98, 178, 180, 0.49)",
-    "brand-80": "rgba(98, 178, 180, 0.64)",
-    "brand-90": "rgba(98, 178, 180, 0.81)",
+    "brand-05": "rgba(98, 178, 180, 0.05)",
+    "brand-10": "rgba(98, 178, 180, 0.1)",
+    "brand-20": "rgba(98, 178, 180, 0.2)",
+    "brand-30": "rgba(98, 178, 180, 0.3)",
+    "brand-40": "rgba(98, 178, 180, 0.4)",
+    "brand-50": "rgba(98, 178, 180, 0.5)",
+    "brand-60": "rgba(98, 178, 180, 0.6)",
+    "brand-70": "rgba(98, 178, 180, 0.7)",
+    "brand-80": "rgba(98, 178, 180, 0.8)",
+    "brand-90": "rgba(98, 178, 180, 0.9)",
     "brand-100": "#62b2b4"
   }
 } as const;
