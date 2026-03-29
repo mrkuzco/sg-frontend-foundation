@@ -1,13 +1,14 @@
 {
   "name": "@sg-foundation/figma-design-tokens",
   "version": "1.0.0",
-  "description": "Imports design tokens from Figma (based on @salling-group/figma-design-tokens)",
+  "description": "Fetches design tokens (variables + styles) from Figma",
   "exports": {
     ".": "./src/index.ts"
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "generate:mystore": "tsx src/configs/mystore.ts"
   },
   "private": true,
   "dependencies": {

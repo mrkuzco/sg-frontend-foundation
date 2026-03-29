@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
       turbo:
         specifier: ^2.5.0
         version: 2.8.21
@@ -139,18 +136,9 @@ importers:
         specifier: ^3.0.0
         version: 3.5.0
     devDependencies:
-      '@sg-foundation/figma-design-tokens':
-        specifier: workspace:*
-        version: link:../figma-design-tokens
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
-      dotenv:
-        specifier: ^16.0.0
-        version: 16.6.1
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
