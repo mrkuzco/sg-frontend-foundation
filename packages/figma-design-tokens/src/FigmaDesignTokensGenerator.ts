@@ -154,6 +154,153 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
     }
 
     await Promise.all(tasks);
+
+    if (this.config.version === 1 && this.config.generateCSS) {
+      this.logMessage('Generating CSS theme file...', 'info');
+      await this.generateCSSTheme();
+    }
+  }
+
+  private async generateCSSTheme() {
+    if (this.config.version !== 1 || !this.config.generateCSS) return;
+    const cfg = this.config.generateCSS;
+
+    const toHex = (c: Color) => {
+      const r = Math.round(c.r * 255);
+      const g = Math.round(c.g * 255);
+      const b = Math.round(c.b * 255);
+      const a = c.a ?? 1;
+      if (a < 0.99) return `rgba(${r}, ${g}, ${b}, ${parseFloat(a.toFixed(2))})`;
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    };
+
+    const resolveToColor = (val: any, depth = 0): string | null => {
+      if (depth > 15) return null;
+      if (isVariableAlias(val)) {
+        const ref = this.variables[val.id];
+        if (!ref) return null;
+        const firstMode = Object.values(ref.valuesByMode)[0];
+        return resolveToColor(firstMode, depth + 1);
+      }
+      if (isColorValue(val)) return toHex(val as Color);
+      return null;
+    };
+
+    const sanitizeKey = (name: string) =>
+      name.replace(/[+&]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+
+    // ── Collect base colors (single mode) ──
+    const baseVars: string[] = [];
+    for (const colId of cfg.baseCollections || []) {
+      const collection = this.variableCollections[colId];
+      if (!collection) continue;
+      const modeId = collection.modes[0].modeId;
+
+      for (const vid of collection.variableIds) {
+        const v = this.variables[vid];
+        if (!v || v.resolvedType !== 'COLOR') continue;
+        const val = v.valuesByMode[modeId];
+        const hex = resolveToColor(val);
+        if (hex) {
+          const key = sanitizeKey(v.name.split('/').pop() || v.name);
+          baseVars.push(`  --color-${key}: ${hex};`);
+        }
+      }
+    }
+
+    // ── Collect semantic colors (light/dark modes) ──
+    const lightVars: string[] = [];
+    const darkVars: string[] = [];
+
+    for (const colId of cfg.semanticCollections || []) {
+      const collection = this.variableCollections[colId];
+      if (!collection) continue;
+
+      const lightMode = collection.modes.find(m => m.name === 'Light');
+      const darkMode = collection.modes.find(m => m.name === 'Dark');
+      if (!lightMode || !darkMode) continue;
+
+      for (const vid of collection.variableIds) {
+        const v = this.variables[vid];
+        if (!v || v.resolvedType !== 'COLOR') continue;
+
+        const parts = v.name.split('/');
+        const category = sanitizeKey(parts[0]);
+        const name = sanitizeKey(parts.slice(1).join('-'));
+        const cssVar = `--color-${category}-${name}`;
+
+        const lightVal = resolveToColor(v.valuesByMode[lightMode.modeId]);
+        const darkVal = resolveToColor(v.valuesByMode[darkMode.modeId]);
+
+        if (lightVal) lightVars.push(`  ${cssVar}: ${lightVal};`);
+        if (darkVal) darkVars.push(`  ${cssVar}: ${darkVal};`);
+      }
+    }
+
+    // ── Collect spacing/utilities (single mode, FLOAT type) ──
+    const utilVars: string[] = [];
+    for (const colId of cfg.baseCollections || []) {
+      const collection = this.variableCollections[colId];
+      if (!collection) continue;
+      const modeId = collection.modes[0].modeId;
+
+      for (const vid of collection.variableIds) {
+        const v = this.variables[vid];
+        if (!v || v.resolvedType !== 'FLOAT') continue;
+        const val = v.valuesByMode[modeId];
+        if (typeof val !== 'number') continue;
+
+        const name = v.name;
+        if (name.includes('border radius') || name.includes('Border Radius')) {
+          const key = sanitizeKey(name.split('/').pop() || name);
+          utilVars.push(`  --radius-${key}: ${val}px;`);
+        } else if (name.includes('spacing') || name.includes('Spacing')) {
+          const key = sanitizeKey(name.split('/').pop() || name);
+          utilVars.push(`  --spacing-${key}: ${val}px;`);
+        }
+      }
+    }
+
+    // ── Build CSS ──
+    let css = `/* Auto-generated from Figma — do not edit manually */\n/* Run: pnpm figma */\n\n`;
+
+    // Tailwind v4 @theme block
+    css += `@theme {\n`;
+    css += `  /* Font */\n`;
+    css += `  --font-sans: "Roboto", sans-serif;\n\n`;
+
+    if (baseVars.length) {
+      css += `  /* Base Colors */\n`;
+      css += baseVars.join('\n') + '\n\n';
+    }
+
+    if (lightVars.length) {
+      css += `  /* Semantic Colors (light default) */\n`;
+      css += lightVars.join('\n') + '\n\n';
+    }
+
+    if (utilVars.length) {
+      css += `  /* Spacing & Border Radius */\n`;
+      css += utilVars.join('\n') + '\n';
+    }
+
+    css += `}\n\n`;
+
+    // Dark mode overrides
+    if (darkVars.length) {
+      css += `.dark {\n`;
+      css += darkVars.join('\n') + '\n';
+      css += `}\n\n`;
+
+      css += `@media (prefers-color-scheme: dark) {\n`;
+      css += `  :root:not(.light) {\n`;
+      css += darkVars.map(v => `  ${v}`).join('\n') + '\n';
+      css += `  }\n`;
+      css += `}\n`;
+    }
+
+    await createTokenFile(css, 'theme', '', this.config.distFolder, 'css' as any, this.appName);
+    this.logMessage(`CSS theme generated: ${lightVars.length} light + ${darkVars.length} dark tokens, ${baseVars.length} base colors, ${utilVars.length} utilities`, 'success');
   }
 
   private async generateTokensFromStyles() {

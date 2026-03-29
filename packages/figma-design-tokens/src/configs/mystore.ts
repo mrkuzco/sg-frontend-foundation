@@ -9,16 +9,6 @@ configureEnv({ path: resolve(__dirname, '../../../../.env') });
 /**
  * MyStore 2.0 Design System
  * Figma: https://www.figma.com/design/vn9H7ncA03gyiMWuQMAAHV/MyStore---2.0
- *
- * Collections (from this file):
- *   - Base Colors: primary, secondary, tertiary, gray, success, warning, danger, info, brand
- *   - Semantic Colors: light/dark mode token mappings
- *   - Utilities & Typefaces: spacing, border-radius, font sizes
- *
- * Styles (from linked libraries, fetched via two-step API):
- *   - Text: Desktop/Tablet/Mobile/Button typography
- *   - Effects: Shadow down/up, Focus rings
- *   - Fills: Gradients
  */
 const mystore = new FigmaDesignTokensGenerator({
   appName: 'MyStore',
@@ -26,14 +16,23 @@ const mystore = new FigmaDesignTokensGenerator({
   figmaFileId: 'vn9H7ncA03gyiMWuQMAAHV',
   nodes: [],
   collections: [
-    'VariableCollectionId:17:1812',  // Base Colors (115 vars)
-    'VariableCollectionId:18:2407',  // Semantic Colors (46 vars, Light/Dark)
-    'VariableCollectionId:34:1192',  // Utilities & Typefaces (81 vars)
+    'VariableCollectionId:17:1812',  // Base Colors
+    'VariableCollectionId:18:2407',  // Semantic Colors
+    'VariableCollectionId:34:1192',  // Utilities & Typefaces
   ],
   fetchStyles: {
     textStylePattern: /^(Desktop|Tablet|Mobile|Button|Labels)\//,
     effectStylePattern: /^(Shadow |Focus Ring)/,
     fillStylePattern: /gradient/i,
+  },
+  generateCSS: {
+    baseCollections: [
+      'VariableCollectionId:17:1812',  // Base Colors
+      'VariableCollectionId:34:1192',  // Utilities & Typefaces
+    ],
+    semanticCollections: [
+      'VariableCollectionId:18:2407',  // Semantic Colors (Light/Dark)
+    ],
   },
   ignoreMissingTokens: true,
   distFolder: '../ui/src/themes/mystore/generated',

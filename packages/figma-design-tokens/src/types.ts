@@ -63,6 +63,24 @@ type ConfigFluidFontSizeCallback = {
   customFluidFontSizeFunction?: (fontSize: number) => string;
 };
 
+type ConfigGenerateCSS = {
+  /**
+   * @description Generate a CSS file with custom properties for Tailwind v4.
+   * Outputs light/dark mode tokens as CSS custom properties with @theme directive.
+   * Specify which variable collections contain light/dark semantic tokens.
+   */
+  generateCSS?: {
+    /** Variable collection IDs that have Light/Dark modes */
+    semanticCollections?: string[];
+    /** Variable collection IDs for base/primitive colors (single mode) */
+    baseCollections?: string[];
+    /** Include typography from fetchStyles */
+    includeTypography?: boolean;
+    /** Include shadows from fetchStyles */
+    includeShadows?: boolean;
+  };
+};
+
 type ConfigFetchStyles = {
   /**
    * @description Fetch text, effect, and fill styles from the file.
@@ -112,7 +130,8 @@ export type IConfigV1 = ConfigAppName &
   ConfigIgnoreMissingTokens &
   ConfigDistFolder &
   ConfigFileExportType &
-  ConfigFetchStyles & {
+  ConfigFetchStyles &
+  ConfigGenerateCSS & {
     /**
      * @description The version of the config
      */
