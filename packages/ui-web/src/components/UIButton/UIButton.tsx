@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@sg-foundation/ui-shared";
+import { cn } from "../../utils/cn";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 font-sans font-medium cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus",

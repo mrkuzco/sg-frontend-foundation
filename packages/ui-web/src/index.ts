@@ -4,5 +4,5 @@ export { UIButton, buttonVariants, type UIButtonProps } from "./components/UIBut
 // Themes (per-app design tokens)
 export * as themes from "./themes";
 
-// Re-export shared utilities
-export { cn } from "@sg-foundation/ui-shared";
+// Utilities
+export { cn } from "./utils/cn";
