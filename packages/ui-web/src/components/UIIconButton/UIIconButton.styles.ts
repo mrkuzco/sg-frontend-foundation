@@ -20,7 +20,7 @@ export const iconButtonVariants = cva(
     "transition-all duration-150",
     "focus-visible:outline-none",
     focusRing,
-    "disabled:cursor-not-allowed",
+    "disabled:cursor-not-allowed disabled:pointer-events-none",
   ].join(" "),
   {
     variants: {
@@ -31,14 +31,16 @@ export const iconButtonVariants = cva(
           "hover:bg-[image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
           "active:bg-[image:linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
           "focus-visible:bg-[image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),linear-gradient(var(--color-surface-primary),var(--color-surface-primary))]",
-          "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)] disabled:shadow-none",
+          "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
+          "disabled:shadow-none",
         ].join(" "),
         secondary: [
-          "bg-[var(--color-surface-bg-10)]",
+          "bg-[image:linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
           "text-[var(--color-text-icon-default)]",
           "hover:bg-[image:linear-gradient(rgba(0,0,0,0.03),rgba(0,0,0,0.03)),linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
-          "active:bg-[var(--color-surface-bg-10)]",
-          "disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)] disabled:shadow-none",
+          "active:bg-[image:linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
+          "disabled:bg-[image:none] disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
+          "disabled:shadow-none",
         ].join(" "),
         tertiary: [
           "border border-[var(--color-border-subtle)]",
@@ -47,7 +49,8 @@ export const iconButtonVariants = cva(
           "hover:border-[var(--color-border-default)]",
           "active:border-[var(--color-border-subtle)]",
           "focus-visible:border-transparent",
-          "disabled:border-[var(--color-border-disabled)] disabled:text-[var(--color-text-icon-disabled)] disabled:shadow-none",
+          "disabled:border-[var(--color-border-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
+          "disabled:shadow-none",
         ].join(" "),
       },
       size: {
