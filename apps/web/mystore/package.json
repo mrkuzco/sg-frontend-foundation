@@ -15,6 +15,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.0",
     "@sg-foundation/ui-web": "workspace:*",
+    "@sg-foundation/icons": "workspace:*",
     "@sg-foundation/hooks": "workspace:*",
     "@sg-foundation/types": "workspace:*",
     "@sg-foundation/api": "workspace:*"

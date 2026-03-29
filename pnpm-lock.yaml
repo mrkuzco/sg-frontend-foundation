@@ -23,6 +23,9 @@ importers:
       '@sg-foundation/hooks':
         specifier: workspace:*
         version: link:../../../packages/hooks
+      '@sg-foundation/icons':
+        specifier: workspace:*
+        version: link:../../../packages/icons
       '@sg-foundation/types':
         specifier: workspace:*
         version: link:../../../packages/types
@@ -108,6 +111,25 @@ importers:
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.14
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  packages/icons:
+    dependencies:
+      '@material-symbols/svg-300':
+        specifier: ^0.27.0
+        version: 0.27.2
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
@@ -564,6 +586,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@material-symbols/svg-300@0.27.2':
+    resolution: {integrity: sha512-SvxhdnucoZjU3DGmGCucmiEzvEOVpzJPJF8erQcCfCZ/L4PjFwDVzn3QGqbQreTnvrZrcIY9p83wStAL5Gps8w==}
 
   '@radix-ui/react-compose-refs@1.1.2':
     resolution: {integrity: sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg==}
@@ -1667,6 +1692,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@material-symbols/svg-300@0.27.2': {}
 
   '@radix-ui/react-compose-refs@1.1.2(@types/react@19.2.14)(react@19.2.4)':
     dependencies:

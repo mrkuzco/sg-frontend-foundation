@@ -1,20 +1,14 @@
 import { UIButton, UITextButton, UIIconButton } from "@sg-foundation/ui-web";
-
-function PlusIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-      <path d="M5 12h14M12 5l7 7-7 7" />
-    </svg>
-  );
-}
+import {
+  IconAdd,
+  IconArrowForward,
+  IconSearch,
+  IconSettings,
+  IconClose,
+  IconDelete,
+  IconFilterList,
+  IconMoreVert,
+} from "@sg-foundation/icons";
 
 export default function App() {
   return (
@@ -47,10 +41,11 @@ export default function App() {
           </div>
 
           <div className="space-y-3">
-            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">With icons</p>
+            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">With Icons</p>
             <div className="flex items-center gap-4">
-              <UIButton variant="primary" size="lg" leadingIcon={<ArrowIcon />}>Button label</UIButton>
-              <UIButton variant="secondary" size="lg" trailingIcon={<ArrowIcon />}>Button label</UIButton>
+              <UIButton variant="primary" size="lg" leadingIcon={<IconArrowForward />}>Continue</UIButton>
+              <UIButton variant="secondary" size="lg" trailingIcon={<IconSearch />}>Search</UIButton>
+              <UIButton variant="tertiary" size="sm" leadingIcon={<IconAdd />}>Add new</UIButton>
             </div>
           </div>
 
@@ -77,11 +72,11 @@ export default function App() {
         <section className="space-y-4">
           <h2 className="text-[18px] font-semibold text-[var(--color-text-icon-default)]">Text Button</h2>
           <div className="flex items-center gap-6">
-            <UITextButton size="lg" leadingIcon={<ArrowIcon />}>Button label</UITextButton>
-            <UITextButton size="sm" leadingIcon={<ArrowIcon />}>Button label</UITextButton>
+            <UITextButton size="lg" leadingIcon={<IconArrowForward />}>Button label</UITextButton>
+            <UITextButton size="sm" leadingIcon={<IconArrowForward />}>Button label</UITextButton>
           </div>
           <div className="flex items-center gap-6">
-            <UITextButton size="lg" disabled leadingIcon={<ArrowIcon />}>Button label</UITextButton>
+            <UITextButton size="lg" disabled leadingIcon={<IconArrowForward />}>Disabled</UITextButton>
           </div>
         </section>
 
@@ -90,30 +85,30 @@ export default function App() {
           <h2 className="text-[18px] font-semibold text-[var(--color-text-icon-default)]">Icon Button</h2>
 
           <div className="space-y-3">
-            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Primary / Secondary / Tertiary</p>
+            <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Large / Medium / Small</p>
             <div className="flex items-center gap-4">
-              <UIIconButton variant="primary" size="lg" icon={<PlusIcon />} />
-              <UIIconButton variant="secondary" size="lg" icon={<PlusIcon />} />
-              <UIIconButton variant="tertiary" size="lg" icon={<PlusIcon />} />
+              <UIIconButton variant="primary" size="lg" icon={<IconAdd />} />
+              <UIIconButton variant="secondary" size="lg" icon={<IconSettings />} />
+              <UIIconButton variant="tertiary" size="lg" icon={<IconClose />} />
             </div>
             <div className="flex items-center gap-4">
-              <UIIconButton variant="primary" size="md" icon={<PlusIcon />} />
-              <UIIconButton variant="secondary" size="md" icon={<PlusIcon />} />
-              <UIIconButton variant="tertiary" size="md" icon={<PlusIcon />} />
+              <UIIconButton variant="primary" size="md" icon={<IconDelete />} />
+              <UIIconButton variant="secondary" size="md" icon={<IconFilterList />} />
+              <UIIconButton variant="tertiary" size="md" icon={<IconMoreVert />} />
             </div>
             <div className="flex items-center gap-4">
-              <UIIconButton variant="primary" size="sm" icon={<PlusIcon />} />
-              <UIIconButton variant="secondary" size="sm" icon={<PlusIcon />} />
-              <UIIconButton variant="tertiary" size="sm" icon={<PlusIcon />} />
+              <UIIconButton variant="primary" size="sm" icon={<IconAdd />} />
+              <UIIconButton variant="secondary" size="sm" icon={<IconSearch />} />
+              <UIIconButton variant="tertiary" size="sm" icon={<IconClose />} />
             </div>
           </div>
 
           <div className="space-y-3">
             <p className="text-[12px] text-[var(--color-text-icon-subtle)]">Disabled</p>
             <div className="flex items-center gap-4">
-              <UIIconButton variant="primary" size="lg" icon={<PlusIcon />} disabled />
-              <UIIconButton variant="secondary" size="lg" icon={<PlusIcon />} disabled />
-              <UIIconButton variant="tertiary" size="lg" icon={<PlusIcon />} disabled />
+              <UIIconButton variant="primary" size="lg" icon={<IconAdd />} disabled />
+              <UIIconButton variant="secondary" size="lg" icon={<IconSettings />} disabled />
+              <UIIconButton variant="tertiary" size="lg" icon={<IconClose />} disabled />
             </div>
           </div>
         </section>
