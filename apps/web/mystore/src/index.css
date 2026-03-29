@@ -1,1 +1,81 @@
 @import "tailwindcss";
+@source "../../../../packages/ui/src";
+
+@theme {
+  /* Typography */
+  --font-sans: "Roboto", sans-serif;
+
+  /* Primary */
+  --color-primary-50: #f1f4f5;
+  --color-primary-100: #e6edef;
+  --color-primary-200: #c4dde4;
+  --color-primary-300: #70adc2;
+  --color-primary-400: #1d8aa9;
+  --color-primary-500: #006688;
+  --color-primary-600: #004359;
+  --color-primary-700: #003546;
+  --color-primary-800: #002936;
+  --color-primary-900: #001f29;
+
+  /* Secondary / Brand */
+  --color-secondary-50: #e8f4f4;
+  --color-secondary-100: #dfefef;
+  --color-secondary-200: #bcddde;
+  --color-secondary-300: #97cacc;
+  --color-secondary-400: #62b2b4;
+  --color-secondary-500: #3c9799;
+  --color-secondary-600: #3a8a8c;
+  --color-secondary-700: #1d6b6d;
+  --color-secondary-800: #074646;
+  --color-secondary-900: #003437;
+
+  /* Gray */
+  --color-gray-30: #fafafa;
+  --color-gray-50: #f6f6f6;
+  --color-gray-100: #f0efef;
+  --color-gray-200: #e5e3e3;
+  --color-gray-300: #dbd8d8;
+  --color-gray-400: #c5c1c1;
+  --color-gray-500: #999797;
+  --color-gray-600: #737070;
+  --color-gray-700: #575555;
+  --color-gray-800: #3e3d3d;
+  --color-gray-900: #322f2f;
+  --color-gray-950: #1e1c1c;
+
+  /* Success */
+  --color-success-50: #eaf8f7;
+  --color-success-500: #40cfbd;
+  --color-success-700: #0a9f8c;
+  --color-success-800: #00776a;
+  --color-success-900: #00534a;
+
+  /* Warning */
+  --color-warning-50: #fff2ea;
+  --color-warning-500: #ed853d;
+  --color-warning-700: #a64c0e;
+
+  /* Danger */
+  --color-danger-50: #fceeee;
+  --color-danger-500: #e03b3b;
+  --color-danger-600: #c82323;
+
+  /* Info */
+  --color-info-50: #eaf8ff;
+  --color-info-400: #6ec8f1;
+  --color-info-500: #3ba9dc;
+  --color-info-600: #0b84bc;
+  --color-info-700: #006999;
+
+  /* Semantic */
+  --color-text-default: #001f29;
+  --color-text-secondary: #667084;
+  --color-text-tertiary: #98a1b2;
+
+  --color-focus: #6ec8f1;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-default);
+}
