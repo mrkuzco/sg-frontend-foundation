@@ -3,6 +3,7 @@ export { UIButton, buttonVariants, type UIButtonProps } from "./components/UIBut
 
 // Tokens
 export { colors } from "./tokens/colors";
+export { semantic } from "./tokens/semantic";
 export { fontFamily, fontSize } from "./tokens/typography";
 export { borderRadius, spacing } from "./tokens/spacing";
 
