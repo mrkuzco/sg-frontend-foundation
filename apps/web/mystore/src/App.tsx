@@ -43,7 +43,7 @@ export default function App() {
           <div className="space-y-3">
             <p className="text-[12px] text-[var(--color-text-icon-subtle)]">With Icons</p>
             <div className="flex items-center gap-4">
-              <UIButton variant="primary" size="lg" leadingIcon={<IconArrowForward />}>Continue</UIButton>
+              <UIButton variant="primary" size="lg" trailingIcon={<IconArrowForward />}>Button label</UIButton>
               <UIButton variant="secondary" size="lg" trailingIcon={<IconSearch />}>Search</UIButton>
               <UIButton variant="tertiary" size="sm" leadingIcon={<IconAdd />}>Add new</UIButton>
             </div>
