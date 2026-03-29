@@ -19,7 +19,7 @@ export const textButtonVariants = cva(
     "focus-visible:outline-none",
     "focus-visible:shadow-[inset_0_0_0_4px_var(--color-border-focus)]",
     "focus-visible:rounded-[var(--radius-sm,4px)] focus-visible:px-2",
-    "disabled:text-[var(--color-text-icon-disabled)] disabled:cursor-not-allowed",
+    "disabled:text-[var(--color-text-icon-disabled)] disabled:cursor-not-allowed disabled:pointer-events-none",
   ].join(" "),
   {
     variants: {
