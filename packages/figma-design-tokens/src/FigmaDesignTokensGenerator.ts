@@ -54,6 +54,11 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
   private valid = false;
   public appName: string = '';
 
+  // Stored by generateTokensFromStyles for CSS generation
+  private extractedEffects: Record<string, string> = {};
+  private extractedGradients: Record<string, string> = {};
+  private extractedTextStyles: Record<string, Array<{ name: string; fontSize: number; fontWeight: number; lineHeight: number; letterSpacing: number }>> = {};
+
   /**
    * Generates design token files from a Figma team library
    *
@@ -281,7 +286,25 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
 
     if (utilVars.length) {
       css += `  /* Spacing & Border Radius */\n`;
-      css += utilVars.join('\n') + '\n';
+      css += utilVars.join('\n') + '\n\n';
+    }
+
+    // Shadows from styles
+    if (Object.keys(this.extractedEffects).length) {
+      css += `  /* Shadows */\n`;
+      for (const [key, value] of Object.entries(this.extractedEffects)) {
+        css += `  --shadow-${key}: ${value};\n`;
+      }
+      css += '\n';
+    }
+
+    // Gradients from styles
+    if (Object.keys(this.extractedGradients).length) {
+      css += `  /* Gradients */\n`;
+      for (const [key, value] of Object.entries(this.extractedGradients)) {
+        css += `  --gradient-${key}: ${value};\n`;
+      }
+      css += '\n';
     }
 
     css += `}\n\n`;
@@ -446,6 +469,11 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
     effectsContent += `export const gradient = {\n${gradientEntries}\n} as const;\n`;
 
     await createTokenFile(effectsContent, 'styles-effects', '', this.config.distFolder, this.config.fileExportType, this.appName);
+
+    // Store for CSS generation
+    this.extractedEffects = effects;
+    this.extractedGradients = gradients;
+    this.extractedTextStyles = textByGroup;
 
     this.logMessage(
       `Generated: ${Object.values(textByGroup).reduce((a, b) => a + b.length, 0)} text styles, ${Object.keys(effects).length} effects, ${Object.keys(gradients).length} gradients`,

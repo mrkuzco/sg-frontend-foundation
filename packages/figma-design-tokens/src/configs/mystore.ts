@@ -16,9 +16,8 @@ const mystore = new FigmaDesignTokensGenerator({
   figmaFileId: 'vn9H7ncA03gyiMWuQMAAHV',
   nodes: [],
   collections: [
-    'VariableCollectionId:17:1812',  // Base Colors
-    'VariableCollectionId:18:2407',  // Semantic Colors
-    'VariableCollectionId:34:1192',  // Utilities & Typefaces
+    'VariableCollectionId:17:1812',  // Base Colors (TS export)
+    'VariableCollectionId:34:1192',  // Utilities & Typefaces (TS export)
   ],
   fetchStyles: {
     textStylePattern: /^(Desktop|Tablet|Mobile|Button|Labels)\//,
