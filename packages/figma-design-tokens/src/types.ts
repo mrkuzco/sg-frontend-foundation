@@ -63,6 +63,22 @@ type ConfigFluidFontSizeCallback = {
   customFluidFontSizeFunction?: (fontSize: number) => string;
 };
 
+type ConfigFetchStyles = {
+  /**
+   * @description Fetch text, effect, and fill styles from the file.
+   * Uses the two-step approach: get style node_ids from file, then fetch node properties.
+   * Useful when styles are defined in a linked library.
+   */
+  fetchStyles?: {
+    /** Pattern to match text style names, e.g. /^(Desktop|Tablet|Mobile|Button|Labels)\// */
+    textStylePattern?: RegExp;
+    /** Pattern to match effect style names, e.g. /^(Shadow |Focus Ring)/ */
+    effectStylePattern?: RegExp;
+    /** Pattern to match fill/gradient style names, e.g. /gradient/ */
+    fillStylePattern?: RegExp;
+  };
+};
+
 type ConfigIgnoreMissingTokens = {
   /**
    * @description Decides if missing tokens should be ignored or not. Defaults to showing const with value 'missing'
@@ -95,7 +111,8 @@ export type IConfigV1 = ConfigAppName &
   ConfigFluidFontSizeCallback &
   ConfigIgnoreMissingTokens &
   ConfigDistFolder &
-  ConfigFileExportType & {
+  ConfigFileExportType &
+  ConfigFetchStyles & {
     /**
      * @description The version of the config
      */

@@ -78,6 +78,45 @@ export const fetchFigmaFileNodes = async (
 };
 
 /**
+ * @description Gets all styles referenced in a file (including from linked libraries).
+ * Returns style metadata keyed by node_id. Use fetchFigmaFileNodesBatched to get actual properties.
+ */
+export const fetchFigmaFileStyles = async (
+  figmaFileId: string
+): Promise<Record<string, { name: string; styleType: string }>> => {
+  try {
+    const data = (await fetchFromFigma(`files/${figmaFileId}`)) as any;
+    return data.styles || {};
+  } catch (error) {
+    throw new Error(`Error fetching file styles: ${error}`);
+  }
+};
+
+/**
+ * @description Fetches nodes in batches (Figma has URL length limits).
+ * Returns a map of node_id -> node document.
+ */
+export const fetchFigmaFileNodesBatched = async (
+  nodeIds: string[],
+  figmaFileId: string,
+  batchSize = 50
+): Promise<Record<string, any>> => {
+  const result: Record<string, any> = {};
+  for (let i = 0; i < nodeIds.length; i += batchSize) {
+    const batch = nodeIds.slice(i, i + batchSize);
+    const queryParams = toQueryParams({ ids: batch.join(',') });
+    const data = (await fetchFromFigma(
+      `files/${figmaFileId}/nodes?${queryParams}`
+    )) as IGetFileNodesResult;
+
+    for (const [id, nodeData] of Object.entries(data.nodes || {})) {
+      if (nodeData?.document) result[id] = nodeData.document;
+    }
+  }
+  return result;
+};
+
+/**
  * @description Lets you enumerate local variables created in the file and remote variables used in the file.
  */
 export const fetchFigmaVariables = async (

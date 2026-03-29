@@ -4,8 +4,6 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Load .env from monorepo root
 configureEnv({ path: resolve(__dirname, '../../../.env') });
 
 /**
@@ -19,16 +17,21 @@ const mystore = new FigmaDesignTokensGenerator({
   nodes: [
     {
       lookFor: 'typography',
-      nodeId: '28:1916', // Foundation > Typography frame
+      nodeId: '28:1916',
     },
   ],
   collections: [
-    'VariableCollectionId:17:1812',  // Base Colors (115 vars)
-    'VariableCollectionId:18:2407',  // Semantic Colors (54 vars, Light/Dark)
-    'VariableCollectionId:34:1192',  // Utilities & Typefaces (83 vars)
-    'VariableCollectionId:74ea7adbe317038402c669e6a5623566faf64e9d/5577:980',  // Primitives (54 vars)
-    'VariableCollectionId:7f4a56c05f6d040e1594dd46c96d56a71e060eb0/52762:322',  // Tokens (53 vars, Light/Dark)
+    'VariableCollectionId:17:1812',  // Base Colors
+    'VariableCollectionId:18:2407',  // Semantic Colors
+    'VariableCollectionId:34:1192',  // Utilities & Typefaces
+    'VariableCollectionId:74ea7adbe317038402c669e6a5623566faf64e9d/5577:980',  // Primitives
+    'VariableCollectionId:7f4a56c05f6d040e1594dd46c96d56a71e060eb0/52762:322',  // Tokens
   ],
+  fetchStyles: {
+    textStylePattern: /^(Desktop|Tablet|Mobile|Button|Labels)\//,
+    effectStylePattern: /^(Shadow |Focus Ring)/,
+    fillStylePattern: /gradient/i,
+  },
   ignoreMissingTokens: true,
   distFolder: 'design-tokens/mystore',
 });
@@ -40,6 +43,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('Failed to generate tokens:', err.message);
+  console.error('Failed:', err.message);
   process.exit(1);
 });
