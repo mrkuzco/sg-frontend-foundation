@@ -1,20 +1,28 @@
-// Auto-generated from Figma — do not edit manually
+// Auto-generated from Figma styles — do not edit manually
 // Run: FIGMA_TOKEN=xxx pnpm sync-tokens
 
 export const boxShadow = {
-  "down-xs": "0px -2px 4px -2px rgba(16,24,40,0.02), 0px -2px 6px -4px rgba(16,24,40,0.02), 0px 0px 2px 0px rgba(0,0,0,0.02)",
-  "down-sm": "0px 4px 8px -4px rgba(16,24,40,0.02), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "down-md": "0px 8px 12px -4px rgba(16,24,40,0.04), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "down-lg": "0px 4px 4px -2px rgba(16,24,40,0.02), 0px 12px 16px -4px rgba(16,24,40,0.04), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "down-xl": "0px 4px 4px -2px rgba(16,24,40,0.03), 0px 20px 24px -4px rgba(16,24,40,0.08), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "up-xs": "0px -2px 4px -2px rgba(16,24,40,0.02), 0px -2px 6px -4px rgba(16,24,40,0.02), 0px 0px 2px 0px rgba(0,0,0,0.02)",
-  "up-sm": "0px -4px 4px -2px rgba(16,24,40,0.02), 0px -4px 8px -4px rgba(16,24,40,0.02), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "up-md": "0px -4px 4px -2px rgba(16,24,40,0.02), 0px -8px 12px -4px rgba(16,24,40,0.04), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "up-lg": "0px -4px 4px -2px rgba(16,24,40,0.02), 0px -12px 16px -4px rgba(16,24,40,0.04), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "up-xl": "0px -4px 4px -2px rgba(16,24,40,0.03), 0px -20px 24px -4px rgba(16,24,40,0.08), 0px 0px 16px 0px rgba(0,0,0,0.04)",
-  "focus-ring": "0 0 0 4px #6ec8f1",
+  "shadow-up-xs": "0px -2px 4px -2px rgba(16, 24, 40, 0.02), 0px -2px 6px -4px rgba(16, 24, 40, 0.02), 0px 0px 2px 0px rgba(0, 0, 0, 0.02)",
+  "shadow-down-sm": "0px 4px 8px -4px rgba(16, 24, 40, 0.02), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-down-md": "0px 8px 12px -4px rgba(16, 24, 40, 0.04), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-down-lg": "0px 4px 4px -2px rgba(16, 24, 40, 0.02), 0px 12px 16px -4px rgba(16, 24, 40, 0.04), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-down-xl": "0px 4px 4px -2px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-down-xxl": "0px 0px 4px -2px rgba(0, 0, 0, 0.04), 0px 16px 20px -4px rgba(0, 0, 0, 0.08), 0px 0px 16px 0px rgba(0, 0, 0, 0.16)",
+  "shadow-up-sm": "0px -4px 4px -2px rgba(16, 24, 40, 0.02), 0px -4px 8px -4px rgba(16, 24, 40, 0.02), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-up-md": "0px -4px 4px -2px rgba(16, 24, 40, 0.02), 0px -8px 12px -4px rgba(16, 24, 40, 0.04), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-up-lg": "0px -4px 4px -2px rgba(16, 24, 40, 0.02), 0px -12px 16px -4px rgba(16, 24, 40, 0.04), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-up-xl": "0px -4px 4px -2px rgba(16, 24, 40, 0.03), 0px -20px 24px -4px rgba(16, 24, 40, 0.08), 0px 0px 16px 0px rgba(0, 0, 0, 0.04)",
+  "shadow-up-xxl": "0px 0px 4px -2px rgba(0, 0, 0, 0.04), 0px -16px 20px -4px rgba(0, 0, 0, 0.08), 0px 0px 16px 0px rgba(0, 0, 0, 0.24)",
+  "focus-ring-focus-default": "0px 0px 0px 4px #3ba9dc, 0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+  "focus-ring-focus-brand": "0px 0px 0px 4px rgba(70, 95, 255, 0.12)",
+  "focus-ring-focus-error": "0px 0px 0px 4px rgba(240, 68, 56, 0.12), 0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+  "focus-ring-focus-success": "0px 0px 0px 4px rgba(18, 183, 106, 0.12), 0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+  "shadow-down-xs": "0px 2px 4px -2px rgba(16, 24, 40, 0.02), 0px 2px 6px -4px rgba(16, 24, 40, 0.02), 0px 0px 2px 0px rgba(0, 0, 0, 0.02)"
 } as const;
 
 export const gradient = {
-  // No gradients found inline — may be in a linked library
+  "gradient-radial-left": "radial-gradient(#004359 9%, #c4d5da 69%, #fbfbfb 100%)",
+  "gradient-radial-center": "radial-gradient(#004359 9%, #c4d5da 69%, #fbfbfb 100%)",
+  "gradient-radial-right": "radial-gradient(#004359 9%, #c4d5da 69%, #fbfbfb 100%)",
+  "gradient-linear100": "linear-gradient(#ffffff 0%, #e0ecf0 50%, #ffffff 100%)"
 } as const;
