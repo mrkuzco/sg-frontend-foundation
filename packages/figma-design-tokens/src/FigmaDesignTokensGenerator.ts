@@ -289,6 +289,49 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
       css += utilVars.join('\n') + '\n\n';
     }
 
+    // Typography from styles (desktop as default)
+    const desktopStyles = this.extractedTextStyles['desktop'] || [];
+    if (desktopStyles.length) {
+      css += `  /* Typography (Desktop) */\n`;
+      const seen = new Set<string>();
+      for (const entry of desktopStyles) {
+        let key = entry.name.replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
+        if (entry.fontWeight <= 300 && !key.includes('light')) key += '-light';
+        if (seen.has(key)) continue;
+        seen.add(key);
+        css += `  --text-${key}: ${entry.fontSize}px;\n`;
+        css += `  --text-${key}--line-height: ${entry.lineHeight}px;\n`;
+        css += `  --text-${key}--font-weight: ${entry.fontWeight};\n`;
+        if (entry.letterSpacing) {
+          css += `  --text-${key}--letter-spacing: ${entry.letterSpacing}em;\n`;
+        }
+      }
+      // Also add button text styles
+      const buttonStyles = this.extractedTextStyles['button'] || [];
+      for (const entry of buttonStyles) {
+        const key = 'btn-' + entry.name.replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        css += `  --text-${key}: ${entry.fontSize}px;\n`;
+        css += `  --text-${key}--line-height: ${entry.lineHeight}px;\n`;
+        css += `  --text-${key}--font-weight: ${entry.fontWeight};\n`;
+      }
+      // Labels
+      const labelStyles = this.extractedTextStyles['labels'] || [];
+      for (const entry of labelStyles) {
+        const key = 'label-' + entry.name.replace(/\s+/g, '-').replace(/\//g, '-').toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        css += `  --text-${key}: ${entry.fontSize}px;\n`;
+        css += `  --text-${key}--line-height: ${entry.lineHeight}px;\n`;
+        css += `  --text-${key}--font-weight: ${entry.fontWeight};\n`;
+        if (entry.letterSpacing) {
+          css += `  --text-${key}--letter-spacing: ${entry.letterSpacing}em;\n`;
+        }
+      }
+      css += '\n';
+    }
+
     // Shadows from styles
     if (Object.keys(this.extractedEffects).length) {
       css += `  /* Shadows */\n`;
