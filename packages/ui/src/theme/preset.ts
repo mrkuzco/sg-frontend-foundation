@@ -1,4 +1,4 @@
-import { colors } from "../tokens/colors";
+import { colors } from "../themes/mystore/primitives";
 import { fontFamily, fontSize } from "../tokens/typography";
 import { borderRadius } from "../tokens/spacing";
 
