@@ -6,8 +6,8 @@ import {
   IconSettings,
   IconClose,
   IconDelete,
-  IconFilterList,
-  IconMoreVert,
+  IconFilter,
+  IconKebab,
 } from "@sg-foundation/icons";
 
 export default function App() {
@@ -119,8 +119,8 @@ export default function App() {
             </div>
             <div className="flex items-center gap-4">
               <UIIconButton variant="primary" size="md" icon={<IconDelete />} />
-              <UIIconButton variant="secondary" size="md" icon={<IconFilterList />} />
-              <UIIconButton variant="tertiary" size="md" icon={<IconMoreVert />} />
+              <UIIconButton variant="secondary" size="md" icon={<IconFilter />} />
+              <UIIconButton variant="tertiary" size="md" icon={<IconKebab />} />
             </div>
             <div className="flex items-center gap-4">
               <UIIconButton variant="primary" size="sm" icon={<IconAdd />} />
