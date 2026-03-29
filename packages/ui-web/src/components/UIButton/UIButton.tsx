@@ -1,23 +1,65 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../utils/cn";
+import type { IUIButtonProps } from "./UIButton.types";
 
+/**
+ * Pill button variants mapped from Figma component:
+ * CTA / pill button / default
+ *
+ * Uses semantic CSS variables from the theme so the same component
+ * works across different themes (MyStore, Netto, etc.)
+ *
+ * Figma specs:
+ *   lg: 44px height, 24px padding, 40px radius, 14px/20px font, 24px icons
+ *   sm: 36px height, 12px padding, 80px radius, 12px/16px font, 20px icons
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-sans font-medium cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus",
+  [
+    "inline-flex items-center justify-center gap-2",
+    "font-sans font-medium cursor-pointer",
+    "transition-all duration-150",
+    "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-border-focus)]",
+    "disabled:cursor-not-allowed",
+  ].join(" "),
   {
     variants: {
       variant: {
-        primary:
-          "bg-primary-500 text-white hover:bg-primary-700 active:bg-primary-500 disabled:bg-black/[0.03] disabled:text-black/[0.30] disabled:pointer-events-none",
-        secondary:
-          "bg-secondary-400/10 text-primary-900 hover:bg-secondary-400/20 active:bg-secondary-400/10 disabled:bg-black/[0.03] disabled:text-black/[0.30] disabled:pointer-events-none",
-        tertiary:
-          "border border-black/10 bg-transparent text-primary-900 hover:border-black/20 active:border-black/10 disabled:border-black/10 disabled:text-black/[0.30] disabled:pointer-events-none",
+        primary: [
+          // Default
+          "bg-[var(--color-surface-primary)] text-[var(--color-text-icon-inverse)]",
+          // Hover: darken with overlay
+          "hover:brightness-[0.85]",
+          // Pressed: back to default
+          "active:brightness-100",
+          // Disabled
+          "disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)] disabled:brightness-100",
+        ].join(" "),
+        secondary: [
+          // Default
+          "bg-[var(--color-surface-bg-10)] text-[var(--color-text-icon-default)]",
+          // Hover: subtle darken
+          "hover:bg-[image:linear-gradient(rgba(0,0,0,0.03),rgba(0,0,0,0.03)),linear-gradient(var(--color-surface-bg-10),var(--color-surface-bg-10))]",
+          // Pressed: back to default
+          "active:bg-[var(--color-surface-bg-10)]",
+          // Disabled
+          "disabled:bg-[var(--color-surface-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
+        ].join(" "),
+        tertiary: [
+          // Default
+          "border border-[var(--color-border-subtle)] bg-transparent text-[var(--color-text-icon-default)]",
+          // Hover: stronger border
+          "hover:border-[var(--color-border-default)]",
+          // Pressed: back to default
+          "active:border-[var(--color-border-subtle)]",
+          // Disabled
+          "disabled:border-[var(--color-border-disabled)] disabled:text-[var(--color-text-icon-disabled)]",
+        ].join(" "),
       },
       size: {
-        lg: "h-11 rounded-[40px] px-6 text-sm",
-        sm: "h-9 rounded-[80px] px-3 text-xs",
+        lg: "h-[44px] min-w-[140px] max-w-[380px] rounded-[40px] px-[24px] text-[14px] leading-[20px]",
+        sm: "h-[36px] min-w-[80px] max-w-[140px] rounded-[80px] px-[12px] text-[12px] leading-[16px]",
       },
     },
     defaultVariants: {
@@ -27,16 +69,10 @@ const buttonVariants = cva(
   },
 );
 
-export interface UIButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  leadingIcon?: ReactNode;
-  trailingIcon?: ReactNode;
-  isLoading?: boolean;
-}
-
-export const UIButton = forwardRef<HTMLButtonElement, UIButtonProps>(
+export const UIButton = forwardRef<
+  HTMLButtonElement,
+  IUIButtonProps & VariantProps<typeof buttonVariants>
+>(
   (
     {
       className,
@@ -53,12 +89,13 @@ export const UIButton = forwardRef<HTMLButtonElement, UIButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
-    const iconSize = size === "sm" ? "w-5 h-5" : "w-6 h-6";
+    const iconSize = size === "sm" ? "size-[20px] shrink-0" : "size-[24px] shrink-0";
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        role="button"
         disabled={disabled || isLoading}
         {...props}
       >
@@ -85,7 +122,7 @@ export const UIButton = forwardRef<HTMLButtonElement, UIButtonProps>(
         ) : (
           <>
             {leadingIcon && <span className={iconSize}>{leadingIcon}</span>}
-            {children}
+            <span className="text-center truncate">{children}</span>
             {trailingIcon && <span className={iconSize}>{trailingIcon}</span>}
           </>
         )}

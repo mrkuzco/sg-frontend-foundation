@@ -1,5 +1,6 @@
-// Web components (Tailwind + Radix)
-export { UIButton, buttonVariants, type UIButtonProps } from "./components/UIButton";
+// Atoms
+export { UIButton, buttonVariants } from "./components/UIButton";
+export type { IUIButtonProps } from "./components/UIButton";
 
 // Themes (per-app design tokens)
 export * as themes from "./themes";
