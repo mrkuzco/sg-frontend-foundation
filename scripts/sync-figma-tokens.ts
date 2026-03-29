@@ -10,7 +10,7 @@ import { dirname } from "path";
 
 const FIGMA_FILE_ID = "vn9H7ncA03gyiMWuQMAAHV";
 const TOKEN = process.env.FIGMA_TOKEN || process.argv[2];
-const OUTPUT_DIR = "packages/ui/src/themes/mystore";
+const OUTPUT_DIR = "packages/ui/design-tokens/mystore";
 
 if (!TOKEN) {
   console.error("Missing FIGMA_TOKEN. Set env var or pass as argument.");

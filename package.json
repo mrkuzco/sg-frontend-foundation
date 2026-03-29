@@ -7,8 +7,9 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "clean": "turbo clean",
-    "sync-tokens": "tsx scripts/sync-figma-tokens.ts",
-    "generate-tokens": "pnpm --filter @sg-foundation/ui generate-tokens"
+    "figma": "pnpm figma:styles && pnpm figma:variables",
+    "figma:styles": "tsx scripts/sync-figma-tokens.ts",
+    "figma:variables": "pnpm --filter @sg-foundation/ui generate-tokens"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

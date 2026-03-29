@@ -1,10 +1,7 @@
 // Components
 export { UIButton, buttonVariants, type UIButtonProps } from "./components/UIButton";
 
-// Base tokens (universal)
-export { borderRadius, spacing } from "./tokens/spacing";
-
-// Themes
+// Themes (per-app tokens)
 export * as themes from "./themes";
 
 // Utilities
