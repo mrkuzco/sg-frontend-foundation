@@ -16,7 +16,7 @@ const focusRing = "focus-visible:shadow-[inset_0_0_0_4px_var(--color-border-focu
 const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2",
-    "font-sans font-medium cursor-pointer",
+    "font-sans cursor-pointer",
     "transition-all duration-150",
     "focus-visible:outline-none",
     focusRing,
@@ -72,8 +72,16 @@ const buttonVariants = cva(
         ].join(" "),
       },
       size: {
-        lg: "h-[44px] min-w-[140px] max-w-[380px] rounded-[40px] px-[24px] text-[14px] leading-[20px]",
-        sm: "h-[36px] min-w-[80px] max-w-[140px] rounded-[80px] px-[12px] text-[12px] leading-[16px]",
+        lg: [
+          "h-[44px] min-w-[140px] max-w-[380px] rounded-[40px] px-[24px]",
+          "text-[length:var(--text-btn-pill-lg)] leading-[var(--text-btn-pill-lg--line-height)]",
+          "font-[weight:var(--text-btn-pill-lg--font-weight)]",
+        ].join(" "),
+        sm: [
+          "h-[36px] min-w-[80px] max-w-[140px] rounded-[80px] px-[12px]",
+          "text-[length:var(--text-btn-pill-sm)] leading-[var(--text-btn-pill-sm--line-height)]",
+          "font-[weight:var(--text-btn-pill-sm--font-weight)]",
+        ].join(" "),
       },
     },
     defaultVariants: {
