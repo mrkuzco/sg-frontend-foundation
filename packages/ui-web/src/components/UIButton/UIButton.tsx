@@ -21,6 +21,7 @@ const buttonVariants = cva(
     "focus-visible:outline-none",
     focusRing,
     "disabled:cursor-not-allowed",
+    "data-[loading]:pointer-events-none",
   ].join(" "),
   {
     variants: {
@@ -109,7 +110,9 @@ export const UIButton = forwardRef<
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         role="button"
-        disabled={disabled || isLoading}
+        disabled={disabled}
+        aria-busy={isLoading || undefined}
+        data-loading={isLoading || undefined}
         {...props}
       >
         {isLoading ? (
