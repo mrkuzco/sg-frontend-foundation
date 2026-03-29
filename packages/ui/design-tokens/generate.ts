@@ -29,7 +29,7 @@ const mystore = new FigmaDesignTokensGenerator({
     'VariableCollectionId:74ea7adbe317038402c669e6a5623566faf64e9d/5577:980',  // Primitives (54 vars)
     'VariableCollectionId:7f4a56c05f6d040e1594dd46c96d56a71e060eb0/52762:322',  // Tokens (53 vars, Light/Dark)
   ],
-  ignoreMissingTokens: false,
+  ignoreMissingTokens: true,
   distFolder: 'design-tokens/mystore',
 });
 

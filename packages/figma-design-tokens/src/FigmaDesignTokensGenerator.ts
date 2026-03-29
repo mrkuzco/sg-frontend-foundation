@@ -231,13 +231,12 @@ export class FigmaDesignTokensGenerator<T extends IConfig = IConfig> {
             return;
           }
 
-          // Skip collections that are hidden from publishing
+          // Note: hiddenFromPublishing check removed to support remote/linked library collections
           if (collection.hiddenFromPublishing) {
             this.logMessage(
-              `Skipping collection "${collection.name}" because it is hidden from publishing`,
+              `Collection "${collection.name}" is hidden from publishing — processing anyway`,
               'info'
             );
-            return;
           }
 
           await this.generateTokensFromCollectionBasedOnVersion(collection);
