@@ -6,6 +6,9 @@ function getAbsolutePath(value: string) {
   return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
 }
 
+// Set editor for "Open in editor" feature
+process.env.EDITOR = '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code';
+
 const config: StorybookConfig = {
   stories: [
     "../src/**/*.mdx",
