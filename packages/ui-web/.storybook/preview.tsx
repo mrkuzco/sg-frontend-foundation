@@ -38,14 +38,24 @@ const preview: Preview = {
     (Story, context) => {
       const colorMode = context.globals.colorMode || 'light';
       return (
-        <div className={colorMode === 'dark' ? 'dark' : ''}>
+        <div
+          className={colorMode === 'dark' ? 'dark' : ''}
+          style={{
+            backgroundColor: 'var(--color-surface-lightest)',
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+          }}
+        >
           <Story />
         </div>
       );
     },
   ],
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
     controls: {
       matchers: {
         color: /(background|color)$/i,
