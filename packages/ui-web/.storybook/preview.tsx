@@ -37,26 +37,15 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const colorMode = context.globals.colorMode || 'light';
-      // When we have multiple themes, we'd swap the CSS import here
-      // const theme = context.globals.theme || 'mystore';
-
       return (
-        <div
-          className={colorMode === 'dark' ? 'dark' : ''}
-          style={{
-            padding: '24px',
-            minHeight: '100px',
-            backgroundColor: colorMode === 'dark'
-              ? 'var(--color-surface-lightest)'
-              : 'var(--color-surface-lighter)',
-          }}
-        >
+        <div className={colorMode === 'dark' ? 'dark' : ''}>
           <Story />
         </div>
       );
     },
   ],
   parameters: {
+    layout: 'centered',
     controls: {
       matchers: {
         color: /(background|color)$/i,
