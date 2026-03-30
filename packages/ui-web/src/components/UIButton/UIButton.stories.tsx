@@ -3,7 +3,7 @@ import { UIButton } from "./UIButton";
 import { IconArrowForward, IconAdd } from "@sg-foundation/icons";
 
 const meta: Meta<typeof UIButton> = {
-  title: "Atoms/UIButton",
+  title: "Buttons/UIButton",
   component: UIButton,
   parameters: {
     layout: "centered",
