@@ -3,7 +3,7 @@ import { UIIconButton } from "./UIIconButton";
 import { IconAdd, IconSettings, IconClose, IconSearch } from "@sg-foundation/icons";
 
 const meta: Meta<typeof UIIconButton> = {
-  title: "Components/UIIconButton",
+  title: "Atoms/UIIconButton",
   component: UIIconButton,
   parameters: {
     layout: "centered",

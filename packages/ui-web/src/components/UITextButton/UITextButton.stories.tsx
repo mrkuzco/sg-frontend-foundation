@@ -3,7 +3,7 @@ import { UITextButton } from "./UITextButton";
 import { IconArrowForward, IconChevronBack } from "@sg-foundation/icons";
 
 const meta: Meta<typeof UITextButton> = {
-  title: "Components/UITextButton",
+  title: "Atoms/UITextButton",
   component: UITextButton,
   parameters: {
     layout: "centered",
