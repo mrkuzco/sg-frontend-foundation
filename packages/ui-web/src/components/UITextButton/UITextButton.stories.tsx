@@ -14,6 +14,9 @@ const meta: Meta<typeof UITextButton> = {
       options: ["lg", "sm"],
     },
     disabled: { control: "boolean" },
+    children: { control: "text" },
+    leadingIcon: { table: { disable: true } },
+    trailingIcon: { table: { disable: true } },
   },
 };
 

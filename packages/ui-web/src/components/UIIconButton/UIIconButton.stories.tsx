@@ -18,6 +18,7 @@ const meta: Meta<typeof UIIconButton> = {
       options: ["lg", "md", "sm"],
     },
     disabled: { control: "boolean" },
+    icon: { table: { disable: true } },
   },
 };
 

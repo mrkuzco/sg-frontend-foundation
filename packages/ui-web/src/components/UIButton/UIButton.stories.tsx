@@ -20,6 +20,11 @@ const meta: Meta<typeof UIButton> = {
     floating: { control: "boolean" },
     isLoading: { control: "boolean" },
     disabled: { control: "boolean" },
+    children: { control: "text" },
+    // Hide non-controllable props
+    asChild: { table: { disable: true } },
+    leadingIcon: { table: { disable: true } },
+    trailingIcon: { table: { disable: true } },
   },
 };
 
