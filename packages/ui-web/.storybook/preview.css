@@ -3,6 +3,8 @@
 @import "../src/themes/mystore/generated/design-token-theme.css";
 @source "../src";
 
-body {
+html, body, #storybook-root {
   font-family: var(--font-sans, "Roboto", sans-serif);
+  background-color: var(--color-surface-lightest);
+  min-height: 100vh;
 }

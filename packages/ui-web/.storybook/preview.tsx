@@ -37,25 +37,13 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const colorMode = context.globals.colorMode || 'light';
-      return (
-        <div
-          className={colorMode === 'dark' ? 'dark' : ''}
-          style={{
-            backgroundColor: 'var(--color-surface-lightest)',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-          }}
-        >
-          <Story />
-        </div>
-      );
+      // Apply dark class to html element so CSS variables switch
+      document.documentElement.classList.toggle('dark', colorMode === 'dark');
+      return <Story />;
     },
   ],
   parameters: {
-    layout: 'fullscreen',
+    layout: 'centered',
     controls: {
       matchers: {
         color: /(background|color)$/i,
