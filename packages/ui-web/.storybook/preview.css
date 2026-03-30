@@ -3,8 +3,15 @@
 @import "../src/themes/mystore/generated/design-token-theme.css";
 @source "../src";
 
-html, body, #storybook-root {
+html, body {
   font-family: var(--font-sans, "Roboto", sans-serif);
   background-color: var(--color-surface-lightest);
   min-height: 100vh;
+}
+
+#storybook-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
